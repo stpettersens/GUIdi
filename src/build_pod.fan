@@ -11,9 +11,5 @@ class Build : build::BuildPod {
 		srcDirs = [`fan/`]
 		resDirs = [`res/`]
 	}
-	@Target { help = "Compile GUIdi from source" }
-	Void compile() { log.info("Compiling GUIdi...") }
-	@Target { help = "Clean up files generated during build" }
-	Void clean() { log.info("Cleaning generated files...") }
 }
 
