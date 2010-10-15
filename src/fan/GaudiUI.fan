@@ -57,7 +57,8 @@ class GaudiUIWindow {
 						+ logic.getGaudiInfo()
 						)
 					}
-				},},
+				},
+			},
 		}
 	}
 }
