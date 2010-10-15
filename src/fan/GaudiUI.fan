@@ -22,23 +22,43 @@ using build
 
 class GaudiUILogic {
 	Str getGaudiInfo() {
-		return "version information"	
-	}
-	Void invokeCommand(Str command) {
-		// ...
+		return "Gaudi information"
 	}
 }
  
 class GaudiUIWindow {
-	static Void main() {
-		GaudiUILogic logic := GaudiUILogic()
+	GaudiUILogic logic := GaudiUILogic()
+	Void main() {
 		Window {
 			title = "GUIdi user interface"
 			size = Size(600, 500)
-			{
-				
+			menuBar = makeMenuBar {
 			}
 		}.open
+	}
+	Menu makeMenuBar() {
+		return Menu 
+		{
+			Menu { text = "File";
+				MenuItem { text = "Load build file"; 
+					onAction.add |Event e| { 
+						FileDialog {}.open(e.window)
+					}
+				},
+				MenuItem { text = "Exit";
+					onAction.add |->| { Env.cur.exit }
+				},
+			},
+			Menu { text = "Help"; 
+				MenuItem { text = "About GUIdi"; 
+					onAction.add |Event e| {
+						Dialog.openInfo(e.window,
+						"GUIdi user interface for Gaudi.\n\n" 
+						+ logic.getGaudiInfo()
+						)
+					}
+				},},
+		}
 	}
 }
 
