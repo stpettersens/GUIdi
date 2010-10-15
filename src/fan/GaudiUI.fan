@@ -16,11 +16,29 @@ limitations under the License.
 
 For dependencies, please see LICENSE file.
 */
+using gfx
 using fwt
+using build
 
-class Main {
+class GaudiUILogic {
+	Str getGaudiInfo() {
+		return "version information"	
+	}
+	Void invokeCommand(Str command) {
+		// ...
+	}
+}
+ 
+class GaudiUIWindow {
 	static Void main() {
-		echo("GUIdi")
+		GaudiUILogic logic := GaudiUILogic()
+		Window {
+			title = "GUIdi user interface"
+			size = Size(600, 500)
+			{
+				
+			}
+		}.open
 	}
 }
 
