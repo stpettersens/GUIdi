@@ -24,9 +24,14 @@ class GaudiUILogic {
 	Str getGaudiInfo() {
 		return "Gaudi information"
 	}
+	Void invokeGaudi(Str? params) {
+		Process gaudi := sys::Process()
+		gaudi.command = ["gaudi", params]
+		gaudi.run()
+	}
 }
  
-class GaudiUIWindow {
+class Main {
 	GaudiUILogic logic := GaudiUILogic()
 	Void main() {
 		Window {
@@ -35,6 +40,7 @@ class GaudiUIWindow {
 			menuBar = makeMenuBar {
 			}
 		}.open
+		logic.invokeGaudi("-v")
 	}
 	Menu makeMenuBar() {
 		return Menu 
