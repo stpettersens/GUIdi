@@ -18,29 +18,31 @@ For dependencies, please see LICENSE file.
 */
 using gfx
 using fwt
-using build
 
 class GaudiUILogic {
-	Str getGaudiInfo() {
-		return "Gaudi information"
-	}
-	Void invokeGaudi(Str? params) {
-		Process gaudi := sys::Process()
+	Void invokeGaudi(Str params) {
+		Process gaudi := Process() // via sys::
 		gaudi.command = ["gaudi", params]
+		gaudi.out = null
 		gaudi.run()
 	}
+	Void loadBuildFile(Event e) {
+		FileDialog {
+			// TODO: Dialog settings
+		}.open(e.window)
+	}
 }
- 
+
 class Main {
 	GaudiUILogic logic := GaudiUILogic()
 	Void main() {
-		Window {
-			title = "GUIdi user interface"
-			size = Size(600, 500)
+		// Invoke Gaudi on run; get version information
+		logic.invokeGaudi("-v") 
+		Window { title = "GUIdi user interface"
+			size = Size(600, 500) // via gfx::
 			menuBar = makeMenuBar {
 			}
 		}.open
-		logic.invokeGaudi("-v")
 	}
 	Menu makeMenuBar() {
 		return Menu 
@@ -48,7 +50,7 @@ class Main {
 			Menu { text = "File";
 				MenuItem { text = "Load build file"; 
 					onAction.add |Event e| { 
-						FileDialog {}.open(e.window)
+						logic.loadBuildFile(e)
 					}
 				},
 				MenuItem { text = "Exit";
@@ -60,7 +62,6 @@ class Main {
 					onAction.add |Event e| {
 						Dialog.openInfo(e.window,
 						"GUIdi user interface for Gaudi.\n\n" 
-						+ logic.getGaudiInfo()
 						)
 					}
 				},
