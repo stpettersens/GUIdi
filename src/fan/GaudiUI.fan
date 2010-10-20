@@ -23,11 +23,11 @@ class GaudiUILogic {
 	Void invokeGaudi(Str params) {
 		Process gaudi := Process() // via sys::
 		gaudi.command = ["gaudi", params]
-		gaudi.out = null
+		//gaudi.out = null
 		gaudi.run()
 	}
 	Void loadFile(Event e, Bool isPlugin) {
-		File openedFile := FileDialog {
+		File? openedFile := FileDialog {
 			mode := FileDialogMode.openFile
 			if(!isPlugin) filterExts = ["build.json", "*.json"]
 			else filterExts = ["*.gpod"]
@@ -41,12 +41,21 @@ class Main {
 	Void main() {
 		// Invoke Gaudi on run; get version information
 		logic.invokeGaudi("-v") 
-		Window { title = "GUIdi"
+		Window { 
+			title = "GUIdi"
+			menuBar = makeMenuBar 
+			InsetPane {
+				RichText {
+					model
+				},
+			},;
 			size = Size(600, 500) // via gfx::
-			menuBar = makeMenuBar {
-			}
 		}.open
 	}
+	
+	**
+	** Build the menu bar
+	**
 	Menu makeMenuBar() {
 		return Menu 
 		{
@@ -81,6 +90,15 @@ class Main {
 					}
 				},
 			},
+		}
+	}
+	
+	**
+	** Build the toolbar
+	**
+	Widget makeToolBar() {
+		return ToolBar {
+			Button { onAction.add { echo("TODO!") } },
 		}
 	}
 }
