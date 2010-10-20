@@ -26,10 +26,13 @@ class GaudiUILogic {
 		gaudi.out = null
 		gaudi.run()
 	}
-	Void loadBuildFile(Event e) {
-		FileDialog {
-			// TODO: Dialog settings
+	Void loadFile(Event e, Bool isPlugin) {
+		File openedFile := FileDialog {
+			mode := FileDialogMode.openFile
+			if(!isPlugin) filterExts = ["build.json", "*.json"]
+			else filterExts = ["*.gpod"]
 		}.open(e.window)
+		// ...
 	}
 }
 
@@ -38,7 +41,7 @@ class Main {
 	Void main() {
 		// Invoke Gaudi on run; get version information
 		logic.invokeGaudi("-v") 
-		Window { title = "GUIdi user interface"
+		Window { title = "GUIdi"
 			size = Size(600, 500) // via gfx::
 			menuBar = makeMenuBar {
 			}
@@ -50,19 +53,31 @@ class Main {
 			Menu { text = "File";
 				MenuItem { text = "Load build file"; 
 					onAction.add |Event e| { 
-						logic.loadBuildFile(e)
+						logic.loadFile(e, false)
 					}
 				},
 				MenuItem { text = "Exit";
 					onAction.add |->| { Env.cur.exit }
 				},
 			},
+			Menu { text = "Build";
+				MenuItem { text = "Run build action";
+					onAction.add |Event e| {
+						logic.invokeGaudi("build.json")
+					}
+				},
+			},
+			Menu { text = "Plugins";
+				MenuItem { text = "Load plug-in code";
+					onAction.add |Event e| {
+						logic.loadFile(e, true)
+					}
+				},
+			},
 			Menu { text = "Help"; 
 				MenuItem { text = "About GUIdi"; 
 					onAction.add |Event e| {
-						Dialog.openInfo(e.window,
-						"GUIdi user interface for Gaudi.\n\n" 
-						)
+						echo("TODO")
 					}
 				},
 			},
