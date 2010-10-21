@@ -37,19 +37,22 @@ class GaudiUILogic {
 }
 
 class Main {
+
+	Image newIcon := Image(`fan://icons/x16/file.png`)
+	
 	GaudiUILogic logic := GaudiUILogic()
 	Void main() {
 		// Invoke Gaudi on run; get version information
 		logic.invokeGaudi("-v") 
 		Window { 
 			title = "GUIdi"
-			menuBar = makeMenuBar 
-			InsetPane {
-				RichText {
-					model
-				},
-			},;
-			size = Size(600, 500) // via gfx::
+			size = Size(600, 500)
+			resizable := false
+			menuBar = makeMenuBar
+			content = EdgePane
+			{
+				top = makeToolBar
+			}
 		}.open
 	}
 	
@@ -97,8 +100,9 @@ class Main {
 	** Build the toolbar
 	**
 	Widget makeToolBar() {
-		return ToolBar {
-			Button { onAction.add { echo("TODO!") } },
+		return ToolBar
+		{
+			Button { image = newIcon; onAction.add { echo("TODO!") } },
 		}
 	}
 }
