@@ -38,7 +38,8 @@ class GaudiUILogic {
 
 class Main {
 
-	Image newIcon := Image(`fan://icons/x16/file.png`)
+	Image newIcon := Image(`fan://icons/x32/file.png`)
+	Image openIcon := Image(`fan://icons/x32/user.png`)
 	
 	GaudiUILogic logic := GaudiUILogic()
 	Void main() {
@@ -64,7 +65,7 @@ class Main {
 		{
 			Menu { text = "File";
 				MenuItem { text = "Load build file"; 
-					onAction.add |Event e| { 
+	 				onAction.add |Event e| { 
 						logic.loadFile(e, false)
 					}
 				},
@@ -103,6 +104,7 @@ class Main {
 		return ToolBar
 		{
 			Button { image = newIcon; onAction.add { echo("TODO!") } },
+			Button { image = openIcon; onAction.add { echo("TODO!") } },
 		}
 	}
 }
