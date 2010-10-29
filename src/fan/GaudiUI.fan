@@ -20,35 +20,38 @@ using gfx
 using fwt
 
 class GaudiUILogic {
-	Void invokeGaudi(Str params) {
-		Process gaudi := Process() // via sys::
-		gaudi.command = ["gaudi", params]
-		//gaudi.out = null
-		gaudi.run()
+	Str invokeGaudi(Str params) {
+		Buf gbuff := Buf()
+		Process gaudi := Process() {
+			command = ["gaudi", params]
+			out = gbuff.out
+		}
+		gaudi.run.join
+		return gbuff.flip.readAllStr
 	}
-	Void loadFile(Event e, Bool isPlugin) {
+	Void loadFile(Event e) {
 		File? openedFile := FileDialog {
 			mode := FileDialogMode.openFile
-			if(!isPlugin) filterExts = ["build.json", "*.json"]
-			else filterExts = ["*.gpod"]
+		    filterExts = ["build.json", "*.json"]
 		}.open(e.window)
-		// ...
+		if(openedFile != null) {
+			// TODO: Load file	
+		}
 	}
 }
 
 class Main {
 
-	Image newIcon := Image(`fan://icons/x32/file.png`)
-	Image openIcon := Image(`fan://icons/x32/user.png`)
+	Image newIcon := Image(`fan://GUIdi/icons/new-file.png`)
+	Image openIcon := Image(`fan://GUIdi/icons/open-file.png`)
+	Image saveIcon := Image(`fan://GUIdi/icons/save-file.png`)
 	
 	GaudiUILogic logic := GaudiUILogic()
 	Void main() {
-		// Invoke Gaudi on run; get version information
-		logic.invokeGaudi("-v") 
 		Window { 
 			title = "GUIdi"
 			size = Size(600, 500)
-			resizable := false
+			//resizable := false
 			menuBar = makeMenuBar
 			content = EdgePane
 			{
@@ -64,9 +67,9 @@ class Main {
 		return Menu 
 		{
 			Menu { text = "File";
-				MenuItem { text = "Load build file"; 
+				MenuItem { text = "Open build file"; 
 	 				onAction.add |Event e| { 
-						logic.loadFile(e, false)
+						logic.loadFile(e)
 					}
 				},
 				MenuItem { text = "Exit";
@@ -81,16 +84,16 @@ class Main {
 				},
 			},
 			Menu { text = "Plugins";
-				MenuItem { text = "Load plug-in code";
+				MenuItem { text = "List plug-ins";
 					onAction.add |Event e| {
-						logic.loadFile(e, true)
+						logic.loadFile(e)
 					}
 				},
 			},
 			Menu { text = "Help"; 
 				MenuItem { text = "About GUIdi"; 
 					onAction.add |Event e| {
-						echo("TODO")
+						showAbout(e)
 					}
 				},
 			},
@@ -103,9 +106,20 @@ class Main {
 	Widget makeToolBar() {
 		return ToolBar
 		{
-			Button { image = newIcon; onAction.add { echo("TODO!") } },
-			Button { image = openIcon; onAction.add { echo("TODO!") } },
+			Button { image = newIcon; onAction.add |Event e| { } },
+			Button { image = openIcon; onAction.add |Event e| { logic.loadFile(e) } },
+			Button { image = saveIcon; onAction.add |Event e| { } },
 		}
+	}
+	**
+	** About dialog for GUIdi
+	**
+	Void showAbout(Event e) {
+		// Invoke Gaudi; get program information string
+		Str gaudiInfo := logic.invokeGaudi("-v")
+		Dialog.openInfo(
+		e.window, "GUIdi, a graphical user interface for the Gaudi build tool.\n" +
+		"Copyright (c) 2010 Sam Saint-Pettersen.\n\n" + gaudiInfo)
 	}
 }
 
