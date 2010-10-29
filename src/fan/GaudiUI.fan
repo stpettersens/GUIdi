@@ -41,21 +41,23 @@ class GaudiUILogic {
 }
 
 class Main {
-
 	Image newIcon := Image(`fan://GUIdi/icons/new-file.png`)
 	Image openIcon := Image(`fan://GUIdi/icons/open-file.png`)
 	Image saveIcon := Image(`fan://GUIdi/icons/save-file.png`)
-	
+	Image buildIcon := Image(`fan://GUIdi/icons/build.png`)
+	Image prefsIcon := Image(`fan://GUIdi/icons/prefs.png`)
+	Image pluginsIcon := Image(`fan://GUIdi/icons/plugins.png`)
+	Image helpIcon := Image(`fan://GUIdi/icons/help.png`)
 	GaudiUILogic logic := GaudiUILogic()
 	Void main() {
 		Window { 
 			title = "GUIdi"
 			size = Size(600, 500)
-			//resizable := false
 			menuBar = makeMenuBar
 			content = EdgePane
 			{
 				top = makeToolBar
+				center = makeTextArea
 			}
 		}.open
 	}
@@ -101,16 +103,29 @@ class Main {
 	}
 	
 	**
-	** Build the toolbar
+	** Build the tool bar
 	**
 	Widget makeToolBar() {
-		return ToolBar
-		{
+		return ToolBar {
 			Button { image = newIcon; onAction.add |Event e| { } },
 			Button { image = openIcon; onAction.add |Event e| { logic.loadFile(e) } },
 			Button { image = saveIcon; onAction.add |Event e| { } },
+			Button { image = buildIcon; onAction.add |Event e| { } },
+			Button { image = pluginsIcon; onAction.add |Event e| { } },
+			Button { image = prefsIcon; onAction.add |Event e| { } },
+			Button { image = helpIcon; onAction.add |Event e| { } },
 		}
 	}
+	
+	**
+	** Build the text area
+	**
+	Widget makeTextArea() {
+		return Text {
+			text = ""
+		}
+	}
+	
 	**
 	** About dialog for GUIdi
 	**
