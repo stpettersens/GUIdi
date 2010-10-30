@@ -30,11 +30,11 @@ class Main {
 	Image helpIcon := Image(`fan://GUIdi/icons/help.png`)
 	
 	**
-	** Define important class globals
+	** Define important globals
 	**
-	Text WorkArea := Text { text = "" }
-	Str FilePath := ""
-	Bool isBuildJson := true
+	Label workArea := Label { text = "" }
+	Str filePath := ""
+	Bool fileIsLoaded := false
 	
 	**
 	** Main method: Construct the window
@@ -48,7 +48,7 @@ class Main {
 			content = EdgePane
 			{
 				top = makeToolBar()
-				center = WorkArea
+				center = workArea
 			}
 		}.open
 	}
@@ -77,8 +77,8 @@ class Main {
 		    filterExts = ["build.json", "*.json"]
 		}.open(e.window)
 		if(openedFile != null) {
-			FilePath := openedFile.osPath
-			echo(FilePath)
+			filePath = openedFile.osPath
+			fileIsLoaded = true
 		}
 	}
 	
@@ -86,17 +86,11 @@ class Main {
 	** Build target 
 	**
 	Void buildTarget(Str action) {
-		if(FilePath.size > 0) {
-			output2WorkArea(
-				invokeGaudi("-f " + FilePath + " " + action)
-			)
-		}
-		else {
-			output2WorkArea("Please load a build file before building.")
-		}
+		if(fileIsLoaded) output2WorkArea(invokeGaudi(action))
+		else output2WorkArea("No build file is loaded.")
 	}
 
-	**
+	**                                                                                                                             
 	** Build the menu bar
 	**
 	Menu makeMenuBar() {
@@ -115,7 +109,7 @@ class Main {
 			Menu { text = "Build";
 				MenuItem { text = "Run build action";
 					onAction.add |Event e| {
-						invokeGaudi("build.json")
+						invokeGaudi("")
 					}
 				},
 			},
@@ -142,7 +136,7 @@ class Main {
 	Widget makeToolBar() {
 		return ToolBar {
 			Button { image = openIcon; onAction.add |Event e| { loadFile(e) } },
-			Button { image = buildIcon; onAction.add |Event e| { buildTarget("build") } },
+			Button { image = buildIcon; onAction.add |Event e| { buildTarget("") } },
 			Button { image = pluginsIcon; onAction.add |Event e| { } },
 			Button { image = prefsIcon; onAction.add |Event e| { } },
 			Button { image = helpIcon; onAction.add |Event e| { } },
@@ -153,7 +147,7 @@ class Main {
 	** Output to the working text area
 	**
 	Void output2WorkArea(Str message) {
-		WorkArea.text = message
+		workArea.text = message
 	}
 	
 	**
@@ -164,7 +158,6 @@ class Main {
 		Str gaudiInfo := invokeGaudi("-v")
 		Dialog.openInfo(
 		e.window, "GUIdi, a graphical user interface for the Gaudi build tool.\n" 
-	
 		+ "Copyright (c) 2010 Sam Saint-Pettersen.\n" +
 		"\nThis software is licensed under the Apache License v2.0.\n\n" + gaudiInfo)
 	}

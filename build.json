@@ -1,0 +1,22 @@
+{
+	"preamble": {
+
+		"target": "Gaudi.jar",
+		"source": "src/*.scala",
+		"compiler": "scalac"
+	},
+
+	"build" [
+
+		{ "echo": "Compiling..." },
+		{ "exec": "gcc" },
+		{ "echo": "Done." }
+	]
+
+	"clean" [
+	
+		{ "echo": "Removing classes..." }
+		
+	]
+}
+
