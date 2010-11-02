@@ -19,7 +19,17 @@ For dependencies, please see LICENSE file.
 using gfx
 using fwt
 
+**
+** Separate class just for one method, because main() has to be static for
+** (future) compatibility with JarDist
+**
 class Main {
+	static Void main() {
+		GaudiUI ui := GaudiUI()
+	}
+}
+
+class GaudiUI {
 	**
 	** Define tool bar button icons
 	**
@@ -37,11 +47,10 @@ class Main {
 	Bool fileIsLoaded := false
 	
 	**
-	** Main method: Construct the window
+	** Constructor: Construct the window
 	**
-	Void main() {
+	new make() {
 		Window {
-			resizable := false // Does not work?
 			title = "GUIdi"
 			size = Size(500, 500)
 			menuBar = makeMenuBar()
@@ -153,7 +162,7 @@ class Main {
 	**
 	** About dialog for GUIdi
 	**
-	Void showAbout(Event e) {
+	 Void showAbout(Event e) {
 		// Invoke Gaudi; get program information string
 		Str gaudiInfo := invokeGaudi("-v")
 		Dialog.openInfo(
