@@ -1,4 +1,4 @@
-# Gaudi installation script (NSIS) for Windows
+# GUIdi installation script (NSIS) for Windows
 # Auto-generated in part by EclipseNSIS Script Wizard
 #
 # This script uses EnvVarUpdate.nsh from:
@@ -16,7 +16,7 @@ Name Gaudi
 !define VERSION 0.1.0.0
 !define COMPANY "Sam Saint-Pettersen"
 !define URL http://github.com/stpettersens/Gaudi
-!define DESC "Gaudi platform agnostic build tool"
+!define DESC "GUIdi"
 !define COPYRIGHT "(c) 2010 Sam Saint-Pettersen"
 
 # MUI Symbol Definitions
@@ -92,10 +92,8 @@ ${ArrayFunc} FreeUnusedMem
 Section
     ${libs->Init}
     ${libsRedun->Init}
-    ${libs->Write} 0 "scala-library.jar"
-    ${libs->Write} 1 "json_simple-1.1.jar"
-    ${libs->Write} 2 "commons-io-1.4.jar"
-    ${libs->Write} 3 "groovy-all-1.7.5.jar"
+    #${libs->Write} 0 "scala-library.jar"
+    #${libs->Write} 1 "json_simple-1.1.jar"
     ${libs->FreeUnusedMem}
     ${libsRedun->FreeUnusedMem}
 SectionEnd
@@ -219,7 +217,7 @@ Section "Gaudi" GaudiTool
     File license.txt
 SectionEnd
 
-# Plug-ins for core program]
+# Plug-ins for core program
 Section "Plug-ins" Plugins
     SetOutPath $INSTDIR\plugins
     ; TODO: Change to packaged plug-in files:
@@ -244,20 +242,17 @@ Section "Third-party libraries" TPLibs
         StrCpy $R8 "true"
     ${EndIf}
     File lib\scala-library.jar
-    File lib\json_simple-1.1.jar
-    File lib\commons-io-1.4.jar
-    File lib\groovy-all-1.7.5.jar
     StrCmpS $R8 "true" 0 skip
     Call removeDuplicates
     skip:
 SectionEnd
 
-LangString DESC_GaudiTool ${LANG_ENGLISH} "Gaudi executable (required)."
-LangString DESC_Plugins ${LANG_ENGLISH} "Plug-ins for Gaudi (recommended)."
-LangString DESC_TPLibs ${LANG_ENGLISH} "Third party libraries Gaudi depends on."
+LangString DESC_GUIdi ${LANG_ENGLISH} "GUIdi executable."
+LangString DESC_Fantom ${LANG_ENGLISH} "Fantom runtime (dep)."
+LangString DESC_TPLibs ${LANG_ENGLISH} "Standard Widget Toolkit (dep)."
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${GaudiTool} $(DESC_GaudiTool)
-  !insertmacro MUI_DESCRIPTION_TEXT ${Plugins} $(DESC_Plugins)
+  !insertmacro MUI_DESCRIPTION_TEXT ${GUIdi} $(DESC_GUIdi)
+  !insertmacro MUI_DESCRIPTION_TEXT ${Fantom} $(DESC_Fantom)
   !insertmacro MUI_DESCRIPTION_TEXT ${TPLibs} $(DESC_TPLibs)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
