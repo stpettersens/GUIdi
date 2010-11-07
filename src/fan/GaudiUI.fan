@@ -21,10 +21,11 @@ using fwt
 
 **
 ** Separate class just for one method, because main() has to be static for
-** (future) compatibility with JarDist
+** (future) compatibility with JarDist and to allow CLI argument to load
+** build file on start up
 **
 class Main {
-	static Void main() {
+	static Void main(Str[] args) {
 		GaudiUI ui := GaudiUI()
 	}
 }
@@ -67,6 +68,7 @@ class GaudiUI {
 	** (This method is only called directly once (with "-v"))
 	**
 	Str invokeGaudi(Str params) {
+		echo(params)
 		Buf gbuff := Buf()
 		Process gaudi := Process() {
 			command = ["gaudi", params]
@@ -95,7 +97,7 @@ class GaudiUI {
 	** Build target 
 	**
 	Void buildTarget(Str action) {
-		if(fileIsLoaded) output2WorkArea(invokeGaudi(action))
+		if(fileIsLoaded) output2WorkArea(invokeGaudi("-f C:\\build.json"))
 		else output2WorkArea("No build file is loaded.")
 	}
 
@@ -145,7 +147,7 @@ class GaudiUI {
 	Widget makeToolBar() {
 		return ToolBar {
 			Button { image = openIcon; onAction.add |Event e| { loadFile(e) } },
-			Button { image = buildIcon; onAction.add |Event e| { buildTarget("") } },
+			Button { image = buildIcon; onAction.add |Event e| { buildTarget("build") } },
 			Button { image = pluginsIcon; onAction.add |Event e| { } },
 			Button { image = prefsIcon; onAction.add |Event e| { } },
 			Button { image = helpIcon; onAction.add |Event e| { } },
