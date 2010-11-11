@@ -22,7 +22,7 @@ using fwt
 **
 ** Separate class just for one method, because main() has to be static for
 ** (future) compatibility with JarDist and to allow CLI argument to load
-** build file on start up
+** and run build file on start up
 **
 class Main {
 	static Void main(Str[] args) {
@@ -65,15 +65,26 @@ class GaudiUI {
 	
 	**
 	** Invoke Gaudi program with applicable parameters
-	** (This method is only called directly once (with "-v"))
 	**
-	Str invokeGaudi(Str params) {
-		echo(params)
+	Str invokeGaudi(Str action) {
 		Buf gbuff := Buf()
 		Process gaudi := Process() {
-			command = ["gaudi", params]
+			command = ["gaudi", "-f", filePath, action]
 			out = gbuff.out
-		}                                 
+		} 
+		gaudi.run.join
+		return gbuff.flip.readAllStr
+	}
+	
+	**
+	** Get Gaudi program version
+	**
+	Str getGaudiVersion() {
+		Buf gbuff := Buf()
+		Process gaudi := Process() {
+			command = ["gaudi", "-v"]
+			out = gbuff.out
+		}
 		gaudi.run.join
 		return gbuff.flip.readAllStr
 	}
@@ -97,7 +108,7 @@ class GaudiUI {
 	** Build target 
 	**
 	Void buildTarget(Str action) {
-		if(fileIsLoaded) output2WorkArea(invokeGaudi("-f C:\\build.json"))
+		if(fileIsLoaded) output2WorkArea(invokeGaudi(action))
 		else output2WorkArea("No build file is loaded.")
 	}
 
@@ -166,7 +177,7 @@ class GaudiUI {
 	**
 	 Void showAbout(Event e) {
 		// Invoke Gaudi; get program information string
-		Str gaudiInfo := invokeGaudi("-v")
+		Str gaudiInfo := getGaudiVersion()
 		Dialog.openInfo(
 		e.window, "GUIdi, a graphical user interface for the Gaudi build tool.\n" 
 		+ "Copyright (c) 2010 Sam Saint-Pettersen.\n" +
