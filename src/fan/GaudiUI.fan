@@ -21,11 +21,10 @@ using fwt
 
 **
 ** Separate class just for one method, because main() has to be static for
-** (future) compatibility with JarDist and to allow CLI argument to load
-** and run build file on start up
+** compatibility with JarDist
 **
 class Main {
-	static Void main(Str[] args) {
+	static Void main() {
 		GaudiUI ui := GaudiUI()
 	}
 }
