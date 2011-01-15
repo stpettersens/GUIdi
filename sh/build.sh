@@ -13,5 +13,8 @@ else
 	if [[ "$(id -u)" != "0" ]]; then
 		echo "You must run this as root."
 		echo "e.g. \"sudo sh/build.sh\""
+		exit
 	fi
 fi
+build
+
